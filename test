@@ -1,0 +1,39 @@
+extends Node2D
+
+@onready var nodes_container = $NodesContainer  # Reference to the parent node of all buttons
+
+func _ready():
+	print("✅ Map scene loaded, running _ready()!")
+	draw_paths()
+
+func draw_paths():
+	var connections = {
+		"Node1": ["Node2", "Node3"],  
+		"Node2": ["Node4"],
+		"Node3": ["Node4"],
+		"Node4": ["Boss"]
+	}
+
+	for start in connections.keys():
+		var ends = connections[start]
+		var start_node = nodes_container.get_node_or_null(start)
+
+		if start_node:
+			var start_size = start_node.size / 2  # Get half the size for centering
+			var start_center = start_node.position + start_size  # Offset to center
+
+			for end in ends:
+				var end_node = nodes_container.get_node_or_null(end)
+				if end_node:
+					var end_size = end_node.size / 2
+					var end_center = end_node.position + end_size
+
+					print("✔ Drawing line from", start, "to", end)
+
+					var new_line = Line2D.new()
+					new_line.width = 5
+					new_line.default_color = Color.BLACK
+					new_line.add_point(start_center)  # Connect from center
+					new_line.add_point(end_center)  # Connect to center
+
+					add_child(new_line)  # Add the new line
