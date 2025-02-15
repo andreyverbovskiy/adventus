@@ -42,9 +42,11 @@ func generate_map():
 			current_layer.append(room_name)
 
 		map_structure[i] = current_layer  
-
+		
 		for prev_room in prev_layer:
-			var num_connections = randi_range(1, len(current_layer))
+			var num_connections = 1 if "Shop" in prev_room or "Puzzle" in prev_room or "Event" in prev_room else randi_range(1, 2)
+		#for prev_room in prev_layer:   # made random number of connections, ended up too nested
+			#var num_connections = randi_range(1, len(current_layer)) 
 			var possible_connections = current_layer.duplicate()
 			possible_connections.shuffle()
 			map_structure[prev_room] = possible_connections.slice(0, num_connections)
@@ -89,7 +91,7 @@ func pick_random_room_type():
 ### **📌 Spawn Room Buttons Dynamically**
 func spawn_rooms():
 	var screen_width = get_viewport_rect().size.x
-	var y_spacing = 120  # Vertical spacing between layers
+	var y_spacing = 200  # Vertical spacing between layers
 
 	for i in map_structure.keys():  # Iterate only over valid keys
 		if typeof(i) != TYPE_INT or typeof(map_structure[i]) != TYPE_ARRAY:
