@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/map.gd" id="1_1w4ck"]
 [ext_resource type="Texture2D" uid="uid://dm4dsr0to8uuc" path="res://assets/map_background.png" id="1_odhgt"]
 [ext_resource type="PackedScene" uid="uid://dplufv3yvfpgq" path="res://scenes/RoomButton.tscn" id="2_acqjt"]
-[ext_resource type="Script" path="res://scenes/camera_control.gd" id="4_gc1dd"]
+[ext_resource type="Script" path="res://scripts/camera_control.gd" id="4_gc1dd"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_1w4ck")
