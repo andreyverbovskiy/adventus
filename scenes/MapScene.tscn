@@ -1,13 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://iedqlh6fquak"]
+[gd_scene load_steps=7 format=3 uid="uid://iedqlh6fquak"]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1_1w4ck"]
 [ext_resource type="Texture2D" uid="uid://dm4dsr0to8uuc" path="res://assets/map_background.png" id="1_odhgt"]
 [ext_resource type="PackedScene" uid="uid://dplufv3yvfpgq" path="res://scenes/RoomButton.tscn" id="2_acqjt"]
 [ext_resource type="Script" path="res://scripts/camera_control.gd" id="4_gc1dd"]
+[ext_resource type="PackedScene" uid="uid://borjqp1t8autr" path="res://scenes/PlayerIcon.tscn" id="4_oinkb"]
+[ext_resource type="Script" path="res://scripts/player_icon.gd" id="5_hujp0"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_1w4ck")
 room_button_scene = ExtResource("2_acqjt")
+player_icon_scene = ExtResource("4_oinkb")
 
 [node name="Background" type="TextureRect" parent="."]
 anchors_preset = 15
@@ -31,6 +34,9 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="PlayerIcon" parent="NodesContainer" instance=ExtResource("4_oinkb")]
+script = ExtResource("5_hujp0")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.7, 0.7)

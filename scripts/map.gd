@@ -10,6 +10,11 @@ var room_buttons = {}  # Keeps track of spawned buttons
 # Reference to the RoomButton scene (must be assigned in the Inspector)
 @export var room_button_scene: PackedScene  
 
+@export var player_icon_scene: PackedScene
+#var player_icon = null
+
+@onready var player_icon = $NodesContainer/PlayerIcon
+
 func _ready():
 	if room_button_scene == null:
 		print("⚠️ WARNING: room_button_scene is NULL. Assigning manually...")
@@ -60,6 +65,10 @@ func generate_map():
 	Global.saved_map = map_structure  # ✅ Save the generated map
 	print("✅ Saved New Map: ", Global.saved_map)
 
+func on_room_selected(room_name: String):
+	var room_button = room_buttons.get(room_name)
+	if room_button:
+		player_icon.move_to(room_button.global_position + (room_button.size / 2))
 
 func pick_random_room_type():
 	# Define weighted probabilities
@@ -88,6 +97,13 @@ func pick_random_room_type():
 
 	return "Battle"  # Fallback (should never happen)
 
+func _on_room_button_pressed(room_name):
+	print("🟢 Clicked on Room:", room_name)
+	if player_icon and room_buttons.has(room_name):
+		# Move Player Icon to clicked room
+		player_icon.move_to(room_buttons[room_name].global_position)
+		print("🚶 Player moving to", room_name)
+
 ### **📌 Spawn Room Buttons Dynamically**
 func spawn_rooms():
 	var screen_width = get_viewport_rect().size.x
@@ -96,7 +112,6 @@ func spawn_rooms():
 	for i in map_structure.keys():  # Iterate only over valid keys
 		if typeof(i) != TYPE_INT or typeof(map_structure[i]) != TYPE_ARRAY:
 			continue  # Skip invalid keys
-
 
 		var num_rooms = len(map_structure[i])
 		var x_spacing = screen_width / (num_rooms + 1)  # Distribute evenly
@@ -107,6 +122,10 @@ func spawn_rooms():
 			if room_button == null:
 				print("❌ ERROR: RoomButton scene is not instantiating!")
 				return  # Exit function early to prevent further errors
+
+			# 🟢 Connect RoomButton signal to map.gd dynamically
+			room_button.pressed.connect(_on_room_button_pressed.bind(room_name))
+
 			# Position the room dynamically
 			room_button.name = room_name
 			room_button.position = Vector2((j + 1) * x_spacing, i * y_spacing + 100)
@@ -119,6 +138,13 @@ func spawn_rooms():
 
 			nodes_container.add_child(room_button)
 			room_buttons[room_name] = room_button  # Store button reference
+
+	# 🟡 Automatically Spawn Player Icon on Start Room
+	if player_icon_scene and "Start" in room_buttons:
+		player_icon = player_icon_scene.instantiate()
+		player_icon.global_position = room_buttons["Start"].global_position + Vector2(32, 32)
+		nodes_container.add_child(player_icon)
+		print("🚀 Player placed on Start Room")
 
 ### **📌 Draw Paths Between Rooms**
 func draw_paths():
